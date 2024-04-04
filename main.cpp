@@ -1,4 +1,5 @@
 #include <iostream>
+# include<stack>
 
 using namespace std;
 
@@ -145,6 +146,19 @@ public:
     void Level_order(Node *p);
 
     int Height(Node *p);
+
+
+    void Pre_order_Iterative() { Pre_order_Iterative(this->root); }
+
+    void Pre_order_Iterative(Node *p);
+
+    void In_order_Iterative() { In_order_Iterative(this->root); }
+
+    void In_order_Iterative(Node *p);
+
+    void Post_order_Iterative() { Post_order_Iterative(this->root); }
+
+    void Post_order_Iterative(Node *p);
 };
 
 void Tree::CreateTree() {
@@ -260,6 +274,77 @@ int Tree::Height(Node *p) {
         return y + 1;
 }
 
+// 顺序 print， left， right
+void Tree::Pre_order_Iterative(Node *p) {
+    stack<Node *> stack;
+    Node *temp;
+    temp = p;
+    while (temp || !stack.empty()) {
+        if (temp) {
+            cout << temp->data << " ";
+            stack.push(temp);
+            temp = temp->lchild;
+        } else {
+            temp = stack.top();
+            stack.pop();
+            temp = temp->rchild;
+        }
+    }
+}
+
+
+// left, print, right
+void Tree::In_order_Iterative(Node *p) {
+    stack<Node *> stack;
+    Node *temp = p;
+    while (temp || !stack.empty()) {
+        if (temp) {
+            stack.push(temp);
+            temp = temp->lchild;
+        } else {
+            temp = stack.top();
+            stack.pop();
+            cout << temp->data << " ";
+            temp = temp->rchild;
+        }
+    }
+}
+
+
+// left, right, print
+// 这个要复杂一些，stack类型要是long来存储Node地址，因为这样可以存储负数地址
+void Tree::Post_order_Iterative(Node *p) {
+    stack<long> stack;
+    long tempLongAddress;
+    Node *temp = p;
+    while (temp || !stack.empty()) {
+        if (temp) {
+            stack.push((long) temp);
+            temp = temp->lchild;
+        } else {
+            // pop from stack,
+            tempLongAddress = stack.top();
+            stack.pop();
+            //if it is positive, then push it to stack again
+            if (tempLongAddress > 0) {
+                // 将栈顶元素的负值推入栈中
+                stack.push(-tempLongAddress);
+                // 根据负值地址找到对应节点的右子节点
+                temp = ((Node *) (tempLongAddress))->rchild;
+            }
+                // if it is negative, print it
+            else {
+                cout << ((Node *) (-1 * tempLongAddress))->data << " ";
+                temp = NULL;
+            }
+
+
+        }
+    }
+
+
+}
+
 
 int main() {
 //    Queue Q;
@@ -278,14 +363,16 @@ int main() {
     Tree t;
     t.CreateTree();
 
-    cout << "PreOrder: ";
-    t.Pre_order();
-    cout << endl;
-    cout << "InOrder: ";
-    t.In_order();
-    cout << endl;
-    cout << "PostOrder: ";
-    t.Post_order();
-    cout << endl;
+//    cout << "PreOrder: ";
+//    t.Pre_order();
+//    cout << endl;
+//    cout << "InOrder: ";
+//    t.In_order();
+//    cout << endl;
+//    cout << "PostOrder: ";
+//    t.Post_order();
+//    cout << endl;
+
+    t.Post_order_Iterative();
 
 }
