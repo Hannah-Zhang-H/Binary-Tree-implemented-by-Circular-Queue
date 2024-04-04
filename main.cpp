@@ -119,16 +119,26 @@ void Queue::Display() {
 
 // class Tree
 class Tree {
-public:
+private:
     Node *root;
 
+public:
     Tree() { root = NULL; }
 
     void CreateTree();
 
+    // overloading ==> non-parameter Pre_order() will call the one with the parameter.
+    // just can do it in a recursive way.
+    // Also, root can be private now. ==> encapsulation
+    void Pre_order() { Pre_order(this->root); }
+
     void Pre_order(Node *p);
 
+    void Post_order() { Post_order(this->root); }
+
     void Post_order(Node *p);
+
+    void In_order() { In_order(this->root); }
 
     void In_order(Node *p);
 
@@ -159,7 +169,7 @@ void Tree::CreateTree() {
         // get a tree node from the queue, ask user to type in its left/ right child
 //        p = q.Front();
         p = q.Leave();
-        cout << "Enter left child for this node: " << endl;
+        cout << "Enter left child for this node: " << p->data << endl;
         string lc;
         getline(cin, lc);
         int intlc = stoi(lc);
@@ -176,7 +186,7 @@ void Tree::CreateTree() {
         }
 
         // Ok, now it's right child's turn
-        cout << "Enter right child of this node:" << endl;
+        cout << "Enter right child of this node:" << p->data << endl;
         string rc;
         getline(cin, rc);
         int intrc = stoi(rc);
@@ -199,6 +209,7 @@ void Tree::Pre_order(Node *p) {
         Pre_order(p->lchild);
         Pre_order(p->rchild);
     }
+
 }
 
 void Tree::Post_order(Node *p) {
@@ -215,6 +226,7 @@ void Tree::In_order(Node *p) {
         cout << p->data << " ";
         Pre_order(p->rchild);
     }
+
 }
 
 void Tree::Level_order(Node *p) {
@@ -265,7 +277,15 @@ int main() {
 // creating a BT
     Tree t;
     t.CreateTree();
-    t.Pre_order(t.root);
 
+    cout << "PreOrder: ";
+    t.Pre_order();
+    cout << endl;
+    cout << "InOrder: ";
+    t.In_order();
+    cout << endl;
+    cout << "PostOrder: ";
+    t.Post_order();
+    cout << endl;
 
 }
