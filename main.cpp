@@ -41,7 +41,7 @@ public:
 };
 
 Queue::Queue() {
-    this->size = 5;
+    this->size = 100;
     front = rear = 0;
     //Q = new int[this->size];
     Q = new Node *[this->size];
@@ -123,6 +123,23 @@ class Tree {
 private:
     Node *root;
 
+    void Pre_order(Node *p);
+
+    void Post_order(Node *p);
+
+    void In_order(Node *p);
+
+    int Height(Node *p);
+
+    int TotalNodes(Node *p);
+
+    void Pre_order_Iterative(Node *p);
+
+    void In_order_Iterative(Node *p);
+
+    void Post_order_Iterative(Node *p);
+
+
 public:
     Tree() { root = NULL; }
 
@@ -132,40 +149,24 @@ public:
     // just can do it in a recursive way.
     // Also, root can be private now. ==> encapsulation
     void Pre_order() { Pre_order(this->root); }
-
-    void Pre_order(Node *p);
-
     void Post_order() { Post_order(this->root); }
-
-    void Post_order(Node *p);
-
     void In_order() { In_order(this->root); }
-
-    void In_order(Node *p);
-
-    void Level_order(Node *p);
-
-    int Height(Node *p);
-
-
+    void Level_order();
+    // -------------------------------------------------------------------
+    // 求Height，我减去了1，因为height从0开始算。如果是求level，那么不需要-1.
+    int Height() { return Height(this->root) -1; }
+    // -------------------------------------------------------------------
+    int TotalNodes() { return TotalNodes(this->root); }
     void Pre_order_Iterative() { Pre_order_Iterative(this->root); }
-
-    void Pre_order_Iterative(Node *p);
-
     void In_order_Iterative() { In_order_Iterative(this->root); }
-
-    void In_order_Iterative(Node *p);
-
     void Post_order_Iterative() { Post_order_Iterative(this->root); }
-
-    void Post_order_Iterative(Node *p);
 };
 
 void Tree::CreateTree() {
     Node *p, *t;
     int x;
-    Queue q(10);
-    cout << "Enter root value " << endl;
+    Queue q(100);
+    cout << "Enter root value: ";
     string input;
     getline(cin, input);
     int int_input = stoi(input);// convert String => integer
@@ -183,7 +184,7 @@ void Tree::CreateTree() {
         // get a tree node from the queue, ask user to type in its left/ right child
 //        p = q.Front();
         p = q.Leave();
-        cout << "Enter left child for this node: " << p->data << endl;
+        cout << "Enter left child for this node: " << p->data << ": ";
         string lc;
         getline(cin, lc);
         int intlc = stoi(lc);
@@ -200,7 +201,7 @@ void Tree::CreateTree() {
         }
 
         // Ok, now it's right child's turn
-        cout << "Enter right child of this node:" << p->data << endl;
+        cout << "Enter right child of this node:" << p->data << ": ";
         string rc;
         getline(cin, rc);
         int intrc = stoi(rc);
@@ -243,35 +244,36 @@ void Tree::In_order(Node *p) {
 
 }
 
-void Tree::Level_order(Node *p) {
+void Tree::Level_order() {
+    Node *p = this->root;
     Node *temp;
-    Queue q(20);
+    Queue q(100);
     cout << p->data << " ";
     q.Join(p);
     while (!q.isEmpty()) {
-        temp = q.Front();
+//        temp = q.Front();
+        temp = q.Leave();
         if (temp->lchild) {
             cout << temp->lchild->data << " ";
             q.Join(temp->lchild);
         }
 
         if (temp->rchild) {
-            cout << temp->rchild->data << endl;
+            cout << temp->rchild->data << " ";
             q.Join(temp->rchild);
         }
     }
 }
 
 int Tree::Height(Node *p) {
-    int x = 0, y = 0;
-    if (!root)
-        return 0;
-    x = Height(p->lchild);
-    y = Height(p->rchild);
-    if (x > y)
-        return x + 1;
-    else
-        return y + 1;
+    int x, y;
+    if (p) {
+        x = Height(p->lchild);
+        y = Height(p->rchild);
+        if (x > y) return x + 1;
+        else return y + 1;
+    }
+    return 0;
 }
 
 // 顺序 print， left， right
@@ -345,6 +347,16 @@ void Tree::Post_order_Iterative(Node *p) {
 
 }
 
+int Tree::TotalNodes(Node *p) {
+    int x, y;
+    if (p) {
+        x = TotalNodes(p->lchild);
+        y = TotalNodes(p->rchild);
+        return x + y + 1;
+    }
+    return 0;
+}
+
 
 int main() {
 //    Queue Q;
@@ -373,6 +385,12 @@ int main() {
 //    t.Post_order();
 //    cout << endl;
 
-    t.Post_order_Iterative();
+//    t.Post_order_Iterative();
+//    t.Level_order();
+    cout << "count number of total nodes:" << t.TotalNodes() << endl;
+
+    cout << "tree height is: " << t.Height()<< endl;
+
+
 
 }
